@@ -1,6 +1,9 @@
 # Load dependencies.
 pmodload 'helper'
 
+# This theme depends on powerline fonts
+# google 'menlo powerline' for if symbols don't display correctly
+
 CURRENT_BG='NONE'
 SEGMENT_SEPARATOR='⮀'
 
@@ -35,9 +38,17 @@ prompt_end() {
 function build_prompt {
   prompt_segment black default '%(1?;%{%F{red}%}✘ ;)%(!;%{%F{yellow}%}⚡ ;)%(1j;%{%F{cyan}%}%j⚙ ;)%{%F{blue}%}%n%{%F{red}%}@%{%F{green}%}%M'
   prompt_segment blue black '%2~'
+
   if $git_status; then
-    prompt_segment green black '${(e)git_info[prompt]}${git_info[status]}'
+    prompt_segment green black 'git ${(e)git_info[prompt]}${git_info[status]}'
+  else
+    # only look for vcs fallback when we can't use the awesome git prompt
+    local vcs_prompt_status="${vcs_info_msg_0_}"
+    if [[ -n $vcs_prompt_status ]]; then 
+      prompt_segment yellow black "${vcs_prompt_status}"
+    fi
   fi
+
   prompt_end
 }
 
@@ -70,6 +81,9 @@ function prompt_paradox_precmd {
   if (( $+functions[git-info] )); then
     git_status=git-info
   fi
+
+  #zstyle ':vcs_info:*:prompt:*' formats "${branch_format}"
+  vcs_info 'prompt'
   timer_result=$(($SECONDS-$start_time))
   if [[ $timer_result -gt 10 ]]; then
     calc_elapsed_time
@@ -84,6 +98,7 @@ function prompt_paradox_setup {
 
   # Load required functions.
   autoload -Uz add-zsh-hook
+  autoload -Uz vcs_info # fallback for non-git vcs 
 
   # Add hook for calling git-info before each command.
   add-zsh-hook preexec prompt_paradox_preexec
@@ -109,6 +124,20 @@ function prompt_paradox_setup {
   zstyle ':prezto:module:git:info:keys' format \
     'prompt' '$(coalesce "%b" "%p" "%c")%s' \
     'status' ' %A%B%S%a%d%m%r%U%u'
+
+ ################### 
+ # Include vcs-info for mercurial
+ #
+  # Formats:
+  #   %b - branchname
+  local branch_format="%s ⭠ %b "
+
+  # Set vcs_info parameters.
+  zstyle ':vcs_info:*' hg
+  zstyle ':vcs_info:*:prompt:*' formats "${branch_format}${action_format}"
+  zstyle ':vcs_info:*:prompt:*' nvcsformats   ""
+
+####### end vcs-info styles ################
 
   # Define prompts.
   PROMPT='
