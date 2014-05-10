@@ -100,9 +100,13 @@ function prompt_paradox_setup {
   autoload -Uz add-zsh-hook
   autoload -Uz vcs_info # fallback for non-git vcs 
 
+
   # Add hook for calling git-info before each command.
   add-zsh-hook preexec prompt_paradox_preexec
   add-zsh-hook precmd prompt_paradox_precmd
+
+  # look for modifcations, etc., disable if slow in large git repo
+  zstyle ':prezto:module:git:info' verbose yes 
 
   zstyle ':prezto:module:editor:info:completing' format '%B%F{red}...%f%b'
   zstyle ':prezto:module:editor:info:keymap:primary' format '%B%F{blue}❯%f%b'
