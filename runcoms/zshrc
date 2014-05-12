@@ -12,3 +12,6 @@ fi
 
 # Customize to your needs...
 
+source $HOME/.yodle-dev-shell-utils/conf/sh/all
+
+export PATH=$PATH:/workspace/bin:$HOME/.yodle-dev-shell-utils/bin
