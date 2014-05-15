@@ -70,7 +70,7 @@ function build_prompt {
     # only look for vcs fallback when we can't use the awesome git prompt
     local vcs_prompt_status="${vcs_info_msg_0_}"
     if [[ -n $vcs_prompt_status ]]; then 
-      prompt_segment yellow black "${vcs_prompt_status}"
+      prompt_segment yellow black " ${vcs_prompt_status} "
     fi
   fi
 
@@ -162,18 +162,22 @@ function prompt_paradox_setup {
  #
   # Formats:
   #   %b - branchname
-  local branch_format="%s ⭠ %b "
+  #   %u - unstagedstr (see below)
+  #   %c - stagedstr (see below)
+  #   %a - action (e.g. rebase-i)
+  #   %R - repository path
 
   # Set vcs_info parameters.
   zstyle ':vcs_info:*' hg
-  zstyle ':vcs_info:*:prompt:*' formats "${branch_format}${action_format}"
+  zstyle ':vcs_info:*:prompt:*' formats "%s ⭠ %b"
+  zstyle ':vcs_info:*:prompt:*' actionformats "%s ⭠ %b [%a]"
   zstyle ':vcs_info:*:prompt:*' nvcsformats   ""
 
 ####### end vcs-info styles ################
 
   # Define prompts.
   PROMPT='
-%{%f%b%k%}$(build_prompt)
+  %{%f%b%k%}$(build_prompt)
  ${editor_info[keymap]} '
   RPROMPT='[%D{%L:%M:%S %p}]'
   SPROMPT='zsh: correct %F{red}%R%f to %F{green}%r%f [nyae]? '
