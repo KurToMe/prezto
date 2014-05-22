@@ -25,7 +25,7 @@ setopt BEEP
 WORDCHARS='*?_-.[]~&;!#$%^(){}<>'
 
 # Use human-friendly identifiers.
-zmodload zsh/terminfo
+#zmodload zsh/terminfo
 typeset -gA key_info
 key_info=(
   'Control'   '\C-'
@@ -102,7 +102,13 @@ function editor-info {
 
   unset REPLY
 
+  #################
+  # Need this de-draw prompt for changes while on same command,
+  # (i.e. change modes in vi) this can be buggy with multi-line prompts! 
+  #     Try printing the first line(s) of prompt in a precmd if you can
+  ##################
   zle reset-prompt
+  
   zle -R
 }
 zle -N editor-info
@@ -125,7 +131,7 @@ function zle-line-init {
   # Update editor information.
   zle editor-info
 }
-zle -N zle-line-init
+#zle -N zle-line-init
 
 # Disables terminal application mode and updates editor information.
 function zle-line-finish {

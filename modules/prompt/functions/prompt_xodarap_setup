@@ -37,8 +37,8 @@ function prompt_sorin_pwd {
 # rendering default background/foreground.
 prompt_segment() {
   local bg fg
-  [[ -n $1 ]] && bg="%K{$1}" || bg="%k"
-  [[ -n $2 ]] && fg="%F{$2}" || fg="%f"
+  [[ -n $1 ]] && bg="%K{$1%}" || bg="%k"
+  [[ -n $2 ]] && fg="%F{$2%}" || fg="%f"
   if [[ $CURRENT_BG != 'NONE' && $1 != $CURRENT_BG ]]; then
     echo -n " %{$bg%F{$CURRENT_BG}%}$SEGMENT_SEPARATOR%{$fg%} "
   else
@@ -51,7 +51,7 @@ prompt_segment() {
 # End the prompt, closing any open segments
 prompt_end() {
   if [[ -n $CURRENT_BG ]]; then
-    echo -n " %{%k%F{$CURRENT_BG}%}$SEGMENT_SEPARATOR"
+    echo -n " %{%k%F{$CURRENT_BG%}%}$SEGMENT_SEPARATOR"
   else
     echo -n "%{%k%}"
   fi
@@ -62,15 +62,15 @@ prompt_end() {
 function build_prompt {
   prompt_segment black default '%(1?;%{%F{red}%}✘ ;)%(!;%{%F{yellow}%}⚡ ;)%(1j;%{%F{cyan}%}%j⚙ ;)%{%F{blue}%}%n%{%F{red}%}@%{%F{green}%}%M'
   #prompt_segment blue black '%2~'
-  prompt_segment blue black '${_prompt_sorin_pwd}'
+  prompt_segment blue black '$_prompt_sorin_pwd'
 
   if $git_status; then
     prompt_segment green black 'git ${(e)git_info[prompt]}${git_info[status]}'
   else
     # only look for vcs fallback when we can't use the awesome git prompt
-    local vcs_prompt_status="${vcs_info_msg_0_}"
+    local vcs_prompt_status="$vcs_info_msg_0_"
     if [[ -n $vcs_prompt_status ]]; then 
-      prompt_segment yellow black " ${vcs_prompt_status} "
+      prompt_segment yellow black " $vcs_prompt_status "
     fi
   fi
 
@@ -117,6 +117,9 @@ function prompt_paradox_precmd {
 
   # Format PWD.
   prompt_sorin_pwd
+
+  print -rP "
+  %{%f%b%k%}$(build_prompt)"
 }
 
 function prompt_paradox_setup {
@@ -175,10 +178,8 @@ function prompt_paradox_setup {
 
 ####### end vcs-info styles ################
 
-  # Define prompts.
-  PROMPT='
-  %{%f%b%k%}$(build_prompt)
- ${editor_info[keymap]} '
+  # Define prompts (most of the prompt is printed in the precmd 
+  PROMPT=' ${editor_info[keymap]} '
   RPROMPT='[%D{%L:%M:%S %p}]'
   SPROMPT='zsh: correct %F{red}%R%f to %F{green}%r%f [nyae]? '
 }

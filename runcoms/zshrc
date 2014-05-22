@@ -27,3 +27,5 @@ source_if_exists $HOME/.alias
 source_if_exists $HOME/.local_zshrc
 
 export PATH=$PATH:/workspace/bin:$HOME/.yodle-dev-shell-utils/bin
+
+export KEYTIMEOUT=1
