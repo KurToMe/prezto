@@ -26,6 +26,6 @@ source_if_exists $HOME/.alias
 # put personal config in this file so they aren't tracked in version control
 source_if_exists $HOME/.local_zshrc
 
-export PATH=$PATH:/workspace/bin:$HOME/.yodle-dev-shell-utils/bin
+export PATH=/workspace/bin:$HOME/.yodle-dev-shell-utils/bin:$PATH
 
 export KEYTIMEOUT=1
