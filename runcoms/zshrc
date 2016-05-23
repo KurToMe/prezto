@@ -18,14 +18,12 @@ function source_if_exists() {
     fi
 }
 
-source_if_exists $HOME/.yodle-dev-shell-utils/conf/sh/all
-
 # put personal aliases in this file so they aren't tracked in version control
 source_if_exists $HOME/.alias
 
 # put personal config in this file so they aren't tracked in version control
 source_if_exists $HOME/.local_zshrc
 
-export PATH=/workspace/bin:$HOME/.yodle-dev-shell-utils/bin:$PATH
+export PATH=$HOME/bin:$PATH
 
 export KEYTIMEOUT=1
