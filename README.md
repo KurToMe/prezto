@@ -30,8 +30,10 @@ version is 4.3.11.
   4. Set Zsh as your default shell:
 
         chsh -s /bin/zsh
+        
+  5. Install powerline fonts from https://github.com/powerline/fonts (to fix rendering of special characters).
 
-  5. Open a new Zsh terminal window or tab.
+  6. Open a new Zsh terminal window or tab.
 
 ### Troubleshooting
 
